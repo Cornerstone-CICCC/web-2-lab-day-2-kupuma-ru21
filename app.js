@@ -47,12 +47,29 @@ function fetchPageData(userId) {
   $.ajax({
     url: `https://dummyjson.com/users/${userId}/posts`,
     success: (result) => {
-      const ul = $(".posts").children("ul")[0];
+      const ul = $(".posts").children("ul");
       result.posts.forEach((post) => {
-        ul.innerHTML += `<li>
-                          <h4>${post.title}</h4>
-                          <p>${post.body}</p>
-                        </li>`;
+        ul.append(
+          `<li>
+            <h4>${post.title}</h4>
+            <p>${post.body}</p>
+            <span>${post.views}</span>
+          </li>`
+        );
+      });
+      $(".posts").on("click", "h4", function () {
+        $("body").append(`
+          <div class="overlay">
+            <div class="modal">
+            <h4>${$(this).text()}</h4>
+            <p>${$(this).next().text()}</p>
+            <p>Views: ${$(this).next().next().text()}</p>
+            <button>Close Modal</button>
+            </div>
+          </div>`);
+      });
+      $("body").on("click", "button", function () {
+        $(".overlay").remove();
       });
     },
   });
